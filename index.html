@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Live Mirror AI - V52.0 Master Wang</title>
+    <title>Live Mirror AI - V53.0 9:16</title>
     <style>
         /* M28 視覺傳播：黑金禪意風格 + 霸氣紅 */
         :root { --bg-color: #050505; --panel-bg: #111111; --accent-color: #c5a059; --power-color: #ff3333; --text-primary: #e0e0e0; }
@@ -14,15 +14,15 @@
         header { padding: 15px; text-align: center; border-bottom: 1px solid #222; font-weight: bold; flex: none; font-size: 18px; display: flex; justify-content: center; align-items: center; gap: 8px; color: var(--accent-color); letter-spacing: 1px; }
         .version-tag { font-size: 10px; background: linear-gradient(45deg, var(--accent-color), #ffd700); padding: 2px 6px; border-radius: 4px; color: #000; font-weight: 900; }
 
-        .stage { flex: 1; display: none; flex-direction: column; align-items: center; padding: 20px 15px; overflow-y: auto; overflow-x: hidden; }
+        .stage { flex: 1; display: none; flex-direction: column; align-items: center; padding: 10px 15px; overflow-y: auto; overflow-x: hidden; }
         .active { display: flex; animation: fadeIn 0.4s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* 3:4 直式比例容器 */
+        /* V53: 改為 9:16 直式全螢幕比例 */
         .viewport-container { 
             width: 100%; 
-            aspect-ratio: 3 / 4; 
-            max-height: 60vh; 
+            aspect-ratio: 9 / 16; 
+            max-height: 70vh; /* 讓長手機可以顯示更多 */
             background: #000; 
             border-radius: 12px; 
             overflow: hidden; 
@@ -37,7 +37,7 @@
         
         video.mirror { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
         img#preview-img { width: 100%; height: 100%; object-fit: cover; } 
-        img#final-result { width: 100%; height: 100%; object-fit: cover; } /* V51 比例修正 */
+        img#final-result { width: 100%; height: 100%; object-fit: cover; } 
         
         #preview-img, #final-result { display: none; }
         #preview-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; color: #555; width: 100%; height: 100%; position: absolute; top: 0; left: 0; background: #080808; }
@@ -70,10 +70,10 @@
         .gender-option.selected { background: var(--accent-color); color: #000; border-color: var(--accent-color); box-shadow: 0 0 15px rgba(197, 160, 89, 0.3); }
 
         .dna-section { width: 100%; background: #1a1a1a; padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #333; }
-        .dna-title { font-size: 14px; color: var(--accent-color); margin-bottom: 10px; font-weight: bold; display: flex; align-items: center; gap: 5px; }
-        .tags-container { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+        .dna-title { font-size: 13px; color: var(--accent-color); margin-bottom: 8px; font-weight: bold; display: flex; align-items: center; gap: 5px; }
+        .tags-container { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
         .tag-check { display: none; }
-        .tag-label { padding: 8px 12px; background: #252525; border-radius: 20px; font-size: 13px; color: #999; cursor: pointer; border: 1px solid #444; transition: all 0.2s; user-select: none; }
+        .tag-label { padding: 6px 10px; background: #252525; border-radius: 15px; font-size: 12px; color: #999; cursor: pointer; border: 1px solid #444; transition: all 0.2s; user-select: none; }
         .tag-check:checked + .tag-label { background: var(--accent-color); color: black; border-color: var(--accent-color); font-weight: bold; }
 
         .style-category-title { width: 100%; font-size: 12px; color: #666; margin-top: 15px; margin-bottom: 8px; text-align: left; padding-left: 5px; border-left: 3px solid var(--accent-color); letter-spacing: 1px; }
@@ -98,26 +98,20 @@
         .progress-wrapper { width: 85%; position: relative; margin-top: 30px; }
         .progress-text { position: absolute; top: -25px; right: 0; color: var(--accent-color); font-weight: bold; font-size: 14px; }
 
-        /* V51.0: 結果頁比例修正 */
+        /* V53.0: 結果頁也使用 9:16 */
         #stage-4 .viewport-container { 
-            aspect-ratio: 3 / 4; 
-            background: transparent; 
+            aspect-ratio: 9 / 16; 
             border: none; 
+            background: transparent; 
         }
-        img#final-result { 
-            width: 100%;
-            height: 100%;
-            object-fit: contain; /* 保持原比例完整顯示 */
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            border-radius: 8px;
-        }
+        img#final-result { width: 100%; height: 100%; object-fit: contain; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border-radius: 8px; }
     </style>
 </head>
 <body>
 
 <div id="app-window">
     <header>
-        Live Mirror AI <span class="version-tag">V52.0 Tanzhu</span>
+        Live Mirror AI <span class="version-tag">V53.0 9:16</span>
     </header>
 
     <div id="stage-intro" class="stage active" style="display: flex;">
@@ -266,7 +260,7 @@
     const video = document.getElementById('webcam'), previewImg = document.getElementById('preview-img'), finalImg = document.getElementById('final-result'), cameraList = document.getElementById('camera-list'), errorMsg = document.getElementById('error-msg');
     const canvasComp = document.getElementById('canvas-comp'); const canvasResize = document.getElementById('canvas-resize');
     let retryCount = 0; const maxRetries = 2; let progressInterval;
-    let currentGender = 'girl'; let pendingStyle = ''; // V52 攔截暫存
+    let currentGender = 'girl'; let pendingStyle = ''; 
 
     window.onerror = function(msg, url, line, col, error) {
         console.error("Global Error:", msg, error);
@@ -320,7 +314,8 @@
 
     async function confirmCamera() {
         const deviceId = cameraList.value;
-        const constraints = { video: { deviceId: { exact: deviceId }, aspectRatio: 0.75, width: { ideal: 720 }, height: { ideal: 960 } } };
+        // V53: 請求 9:16 (0.5625)
+        const constraints = { video: { deviceId: { exact: deviceId }, aspectRatio: 0.5625, width: { ideal: 1080 }, height: { ideal: 1920 } } };
         try { const stream = await navigator.mediaDevices.getUserMedia(constraints); video.srcObject = stream; document.getElementById('start-overlay').style.display = 'none'; switchStage('stage-1'); } catch (err) { 
             try { const stream = await navigator.mediaDevices.getUserMedia({ video: { deviceId: { exact: deviceId } } }); video.srcObject = stream; document.getElementById('start-overlay').style.display = 'none'; switchStage('stage-1'); } catch (fatalErr) { alert("相機啟動失敗，請檢查權限設定。"); } 
         }
@@ -346,6 +341,7 @@
 
     function capturePhoto() { processInputImage(video, true); }
 
+    let currentGender = 'girl';
     function switchGender(g) { 
         currentGender = g; 
         document.getElementById('btn-boy').classList.toggle('selected', g==='boy'); 
@@ -360,9 +356,6 @@
         return tags.join(", ");
     }
 
-    // ==========================
-    // V52: 霸氣攔截機制
-    // ==========================
     function triggerTrap(styleKey) {
         pendingStyle = styleKey; 
         document.getElementById('question-overlay').style.display = 'flex';
@@ -373,18 +366,14 @@
     function answerQuestion(isHim) {
         document.getElementById('q-step-1').style.display = 'none';
         document.getElementById('q-step-2').style.display = 'flex';
-        
         const textEl = document.getElementById('praise-text');
         if (isHim) {
             textEl.innerHTML = "<b>哈哈哈！果然是你！</b><br>王壇主，久仰大名！<br>既然本尊降臨，那還有什麼好說的？<br>這份霸氣與擔當，AI 務必完美呈現！<br><b>來看成品！</b>";
         } else {
             textEl.innerHTML = "<b>哼，少騙我了！</b><br>這股不怒自威的「壇主級」氣勢，<br>普通人哪承擔得起？<br>就算你現在不是，將來也必成大器！<br><b>廢話少說，照樣最高規格伺候！</b>";
         }
-
         const bar = document.getElementById('praise-bar');
         setTimeout(() => { bar.style.width = '100%'; }, 100);
-
-        // 3.5秒後開始生成
         setTimeout(() => {
             document.getElementById('question-overlay').style.display = 'none';
             realGenerate();
@@ -396,16 +385,16 @@
         document.getElementById('loading-text').innerText = "⚡ AI 繪圖中...";
         simulateProgress();
         retryCount = 0;
-        // V51 比例: 強制請求 768x1024 直式圖片
-        tryLoadAI(pendingStyle, 768, 1024);
+        // V53: 強制請求 576x1024 直式圖片
+        tryLoadAI(pendingStyle, 576, 1024);
     }
 
     function tryLoadAI(styleKey, width, height) {
         let dna = getDNA();
         let subject = currentGender === 'boy' ? "handsome man, male" : "beautiful woman, female";
         let fullPrompt = ""; 
-        // V51: 比例鎖定
-        const ratioFix = ", aspect ratio 3:4";
+        // V53: 加入 9:16 指令
+        const ratioFix = ", aspect ratio 9:16, vertical composition";
 
         if(styleKey === 'pixar') fullPrompt = `cute 3d pixar style portrait of ${subject}, ${dna}, highly detailed, studio lighting, big eyes, 8k, vertical composition${ratioFix}`; 
         else if(styleKey === 'ghibli') fullPrompt = `studio ghibli anime portrait of ${subject}, ${dna}, hayao miyazaki style, watercolor background, high quality, vertical composition${ratioFix}`; 
@@ -477,7 +466,6 @@
             canvasComp.height = workH;
             const ctx = canvasComp.getContext('2d');
 
-            // 簡單直接繪製圖片
             ctx.drawImage(imageSource, 0, 0);
             
             finalImg.src = canvasComp.toDataURL('image/png'); 
